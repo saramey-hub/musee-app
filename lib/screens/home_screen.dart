@@ -39,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     final response = await http.get(
       Uri.parse(
-          "http://192.168.61.1sssss/musee-api/public/index.php?action=visites&limit=10&offset=$offset"),
+          "http://192.168.61.1/musee-api/public/index.php?action=visites&limit=10&offset=$offset"),
     );
 
     if (response.statusCode == 200) {
@@ -92,7 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
 
                     Image.network(
-                      musee['photo'],
+                      "http://192.168.61.1/site-admin/public/uploads/${musee['photo']}",
                       height: 180,
                       width: double.infinity,
                       fit: BoxFit.cover,
@@ -114,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                           const SizedBox(height: 5),
 
-                          Text("Date : ${musee['date']}"),
+                          Text("Date : ${musee['date_visite']}"),
                           Text("Prix : ${musee['prix']} €"),
                         ],
                       ),

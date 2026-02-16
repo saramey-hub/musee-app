@@ -17,9 +17,9 @@ class DetailScreen extends StatelessWidget {
           children: [
 
             Image.network(
-              musee['photo'],
+              "http://192.168.61.1/site-admin/public/uploads/${musee['photo']}",
+              height: 180,
               width: double.infinity,
-              height: 250,
               fit: BoxFit.cover,
             ),
 
@@ -38,7 +38,7 @@ class DetailScreen extends StatelessWidget {
 
                   const SizedBox(height: 10),
 
-                  Text("Date : ${musee['date']}"),
+                  Text("Date : ${musee['date_visite']}"),
                   Text("Prix : ${musee['prix']} €"),
 
                   const SizedBox(height: 15),
