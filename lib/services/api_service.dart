@@ -5,7 +5,7 @@ import '../models/visite.dart';
 class ApiService {
   static const String baseUrl = "http://192.168.1.88/musee-api/public/index.php";
 
-  /// Récupère toutes les visites
+
   static Future<List<Visite>> fetchVisites() async {
     final response = await http.get(Uri.parse("$baseUrl?action=visites"));
 

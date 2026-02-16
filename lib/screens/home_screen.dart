@@ -1,6 +1,7 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import '../models/visite.dart';
-import '../services/api_service.dart';
+import 'package:http/http.dart' as http;
+import 'detail_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -10,52 +11,120 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late Future<List<Visite>> visites;
+
+  List musees = [];
+  int offset = 0;
+  bool isLoading = false;
+
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    visites = ApiService.fetchVisites();
+    fetchMusees();
+
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >
+          _scrollController.position.maxScrollExtent * 0.8) {
+
+        if (!isLoading) {
+          fetchMusees();
+        }
+      }
+    });
+  }
+
+  Future fetchMusees() async {
+    isLoading = true;
+
+    final response = await http.get(
+      Uri.parse(
+          "http://192.168.61.1sssss/musee-api/public/index.php?action=visites&limit=10&offset=$offset"),
+    );
+
+    if (response.statusCode == 200) {
+      List newData = json.decode(response.body);
+
+      setState(() {
+        musees.addAll(newData);
+        offset += 10;
+      });
+    }
+
+    isLoading = false;
+  }
+
+  Future refresh() async {
+    musees.clear();
+    offset = 0;
+    await fetchMusees();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Liste des Musées")),
-      body: FutureBuilder<List<Visite>>(
-        future: visites,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text("Erreur: ${snapshot.error}"));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text("Aucune visite trouvée"));
-          }
+      appBar: AppBar(
+        title: const Text("Musées"),
+        centerTitle: true,
+      ),
+      body: RefreshIndicator(
+        onRefresh: refresh,
+        child: ListView.builder(
+          controller: _scrollController,
+          itemCount: musees.length,
+          itemBuilder: (context, index) {
 
-          final data = snapshot.data!;
-          return ListView.builder(
-            itemCount: data.length,
-            itemBuilder: (context, index) {
-              final visite = data[index];
-              return Card(
-                margin: const EdgeInsets.all(8),
-                child: ListTile(
-                  leading: Image.network(
-                    "http://10.0.2.2/site-admin/public/uploads/${visite.photo}",
-                    width: 60,
-                    fit: BoxFit.cover,
+            final musee = musees[index];
+
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DetailScreen(musee: musee),
                   ),
-                  title: Text(visite.nom),
-                  subtitle: Text("${visite.dateVisite} - ${visite.prix} €"),
-                  onTap: () {
+                );
+              },
+              child: Card(
+                margin: const EdgeInsets.all(10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
 
-                  },
+                    Image.network(
+                      musee['photo'],
+                      height: 180,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    ),
+
+                    Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+
+                          Text(
+                            musee['nom'],
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+
+                          const SizedBox(height: 5),
+
+                          Text("Date : ${musee['date']}"),
+                          Text("Prix : ${musee['prix']} €"),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              );
-            },
-          );
-        },
+              ),
+            );
+          },
+        ),
       ),
     );
   }
