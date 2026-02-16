@@ -45,6 +45,12 @@ class DetailScreen extends StatelessWidget {
 
                   Text(musee['description']),
 
+
+
+                  const SizedBox(height: 100),
+
+                  Text(musee['contact_nom']),
+                  Text(musee['contact_email']),
                   const SizedBox(height: 20),
 
                   ElevatedButton(
