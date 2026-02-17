@@ -40,6 +40,10 @@ class DetailScreen extends StatelessWidget {
 
                   Text("Date : ${musee['date_visite']}"),
                   Text("Prix : ${musee['prix']} €"),
+                  Text("Latitude: ${musee['latitude']}"),
+                  Text("Longitude:${musee['longitude']}"),
+                  
+
 
                   const SizedBox(height: 15),
 
@@ -47,7 +51,7 @@ class DetailScreen extends StatelessWidget {
 
 
 
-                  const SizedBox(height: 150),
+                  const SizedBox(height: 100),
 
                   ElevatedButton(
                     onPressed: () {
@@ -60,6 +64,9 @@ class DetailScreen extends StatelessWidget {
                     child:
 
                     const Text("Réserver"),
+                    style: ElevatedButton.styleFrom(
+
+                    ),
                   ),
 
                   const SizedBox(height: 52),
