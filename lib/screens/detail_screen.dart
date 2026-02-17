@@ -47,11 +47,7 @@ class DetailScreen extends StatelessWidget {
 
 
 
-                  const SizedBox(height: 100),
-
-                  Text(musee['contact_nom']),
-                  Text(musee['contact_email']),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 150),
 
                   ElevatedButton(
                     onPressed: () {
@@ -61,8 +57,16 @@ class DetailScreen extends StatelessWidget {
                         ),
                       );
                     },
-                    child: const Text("Réserver"),
-                  )
+                    child:
+
+                    const Text("Réserver"),
+                  ),
+
+                  const SizedBox(height: 52),
+                  Text("Contact email : ${musee['contact_email']}"),
+                  const SizedBox(height: 20),
+
+
                 ],
               ),
             ),
