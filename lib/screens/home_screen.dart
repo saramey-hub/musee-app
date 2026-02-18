@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'detail_screen.dart';
+import 'add_musee_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -126,6 +127,22 @@ class _HomeScreenState extends State<HomeScreen> {
           },
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final result = await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const AddMuseeScreen(),
+            ),
+          );
+          if (result == true) {
+            fetchMusees();
+          }
+        },
+        child: const Icon(Icons.add),
+      ),
+
+
     );
   }
 }
